@@ -42,13 +42,15 @@ export namespace Driver
      */
     export type Promisive<Instance extends object, UseParametric extends boolean = false> = 
     {
-        readonly [P in keyof Instance]: Instance[P] extends Function
-            ? Functional<Instance[P], UseParametric> // function, its return type would be capsuled in the Promise
-            : value_of<Instance[P]> extends object
-                ? Instance[P] extends object
-                   ? Promisive<Instance[P], UseParametric> // object would be promisified
-                   : never // cannot be
-                : never // atomic value
+        readonly [P in keyof Instance]: is_edge_underscored<P> extends true
+            ? never
+            : Instance[P] extends Function
+                ? Functional<Instance[P], UseParametric> // function, its return type would be capsuled in the Promise
+                : value_of<Instance[P]> extends object
+                    ? Instance[P] extends object
+                        ? Promisive<Instance[P], UseParametric> // object would be promisified
+                        : never // cannot be
+                    : never // atomic value
     } & IRemoteObject;
 
     /**
@@ -76,6 +78,17 @@ export namespace Driver
      */
     type FunctionalParams<Params extends any[], UseParametric extends boolean> = 
         UseParametric extends true ? Parametric<Params> : Params;
+
+    /**
+     * @hidden
+     */
+    type is_edge_underscored<P> = P extends string
+        ? P[0] extends "_"
+            ? true
+            : P[typeof (P.length - 1)] extends "_"
+                ? true
+                : false
+        : false;
 
     /* ----------------------------------------------------------------
         PRIMITIFIERS
