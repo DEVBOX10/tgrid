@@ -41,12 +41,21 @@ async function main(): Promise<void>
     // TEST PAGES
     //----
     // WEB
-    await import(__dirname + "/web-server.js");
-    await _Paginate(browser, "web.html");
+    try
+    {
+        await import(__dirname + "/web-server.js");
+        await _Paginate(browser, "web.html");
 
-    // WORKERS
-    await _Paginate(browser, "worker.html");
-    await _Paginate(browser, "shared-worker.html");
+        // WORKERS
+        await _Paginate(browser, "worker.html");
+        await _Paginate(browser, "shared-worker.html");
+    }
+    catch (exp)
+    {
+        console.log("An error has occured");
+        console.log(exp);
+        process.exit(-1);
+    }
 
     //----
     // TERMINATES
