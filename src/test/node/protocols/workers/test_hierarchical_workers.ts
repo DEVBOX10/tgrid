@@ -9,7 +9,7 @@ export async function test_hierarchical_workers(): Promise<void>
     for (let i: number = 0; i < 5; ++i)
     {
         // DO CONNECT
-        await connector.connect(__dirname + "/internal/calculator.js");
+        await connector.connect(__dirname + "/internal/calculator.js", "a", "b");
 
         // DO TEST
         let driver: Driver<ICalculator> = connector.getDriver<ICalculator>();

@@ -1,27 +1,36 @@
 //================================================================ 
 /** @module tgrid.protocols.workers */
 //================================================================
+import thread = require("worker_threads");
+
 /**
  * @hidden
  */
-class WorkerServerPolyfill
+class ParentPort
 {
     public static postMessage(message: any): void
     {
-        (global.process as Required<NodeJS.Process>).send(message);
+        thread.parentPort!.postMessage(message);
     }
 
     public static close(): void
     {
-        global.process.exit();
+        global.process.exit(0);
     }
 
     public static set onmessage(listener: (event: MessageEvent) => void)
     {
-        global.process.on("message", msg =>
+        thread.parentPort!.on("message", msg =>
         {
             listener({data: msg} as MessageEvent);
         });
     }
+
+    public static get document(): Document | undefined
+    {
+        return (thread.parentPort === null)
+            ? null! as Document // NOT WORKER
+            : undefined;
+    }
 }
-export = WorkerServerPolyfill;
+export = ParentPort;

@@ -1,4 +1,6 @@
+import 'source-map-support/register';
 import fs = require("fs");
+
 import { StringUtil } from "../utils/StringUtil";
 
 interface IModule

@@ -6,17 +6,17 @@
     "email": "samchon@samchon.org",
     "url": "http://samchon.org"
   },
-  "version": "0.3.0",
+  "version": "0.3.1-dev.20200206",
   "main": "index.js",
   "typings": "index.d.ts",
   "scripts": {
     "api": "typedoc src --plugin typedoc-plugin-external-module-name --exclude \"src/test/**\" --out ",
-    "build": "npm run compile && npm run bundle && npm run test",
+    "build": "npm run compile && npm run test",
     "bundle": "node build/bundle",
     "compile": "tsc",
     "clean": "node build/clean",
     "dev": "tsc --watch",
-    "test": "npm run test-node && npm run test-browser",
+    "test": "npm run test-node",
     "test-browser": "node test/browser",
     "test-node": "node test/node"
   },
@@ -27,20 +27,21 @@
   },
   "devDependencies": {
     "@types/browserify": "^12.0.36",
-    "@types/node": "^10.12.0",
+    "@types/node": "^10.17.14",
     "@types/puppeteer": "^1.19.1",
     "@types/sharedworker": "0.0.28",
     "@types/websocket": "0.0.40",
-    "browserify": "^16.2.3",
+    "browserify": "^16.5.0",
     "local-web-server": "^2.6.0",
     "mv": "^2.1.1",
     "puppeteer": "^1.20.0",
+    "source-map-support": "^0.5.16",
     "typedoc": "^0.14.2",
     "typedoc-plugin-external-module-name": "^2.0.0",
-    "typescript": "^3.7.2",
+    "typescript": "^3.7.5",
     "whatwg-fetch": "^3.0.0"
   },
-  "homepage": "https://github.com/samchon/tgrid#readme",
+  "homepage": "https://tgrid.com",
   "repository": {
     "type": "git",
     "url": "https://github.com/samchon/tgrid.git"

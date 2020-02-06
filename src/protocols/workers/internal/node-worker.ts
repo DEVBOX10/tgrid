@@ -5,7 +5,6 @@ import { tmpdir } from "os";
 import { sep } from "path";
 
 import { FileSystem } from "./FileSystem";
-import { Worker as _Worker } from "./Worker";
 
 /* ----------------------------------------------------------------
     GLOBAL FUNCTIONS
@@ -36,9 +35,9 @@ export async function compile(content: string): Promise<string>
 /**
  * @hidden
  */
-export function execute(jsFile: string, ...args: string[]): Worker
+export function execute(jsFile: string, ...args: any[]): Worker
 {
-    return new _Worker(jsFile, ...args) as any;
+    return new g.Worker(jsFile, ...args) as any;
 }
 
 /**
@@ -53,3 +52,27 @@ export async function remove(path: string): Promise<void>
     }
     catch {}
 }
+
+/**
+ * @hidden
+ */
+interface IFeature
+{
+    Worker: typeof Worker;
+}
+
+/**
+ * @hidden
+ */
+const g: IFeature = (function () 
+{
+    try 
+    { 
+        require("worker_threads");
+        return require("./threads/Worker"); 
+    }
+    catch 
+    { 
+        return require("./processes/Worker"); 
+    }
+})();

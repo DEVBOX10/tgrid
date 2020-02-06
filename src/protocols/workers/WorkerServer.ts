@@ -73,13 +73,8 @@ export class WorkerServer<Provider extends object = {}>
     public async open(provider: Provider | null = null): Promise<void>
     {
         // TEST CONDITION
-        if (is_node() === false)
-        {
-            if (self.document !== undefined)
-                throw new DomainError("This is not Worker.");    
-        }
-        else if (global.process.send === undefined)
-            throw new DomainError("This is not Child Process.");    
+        if (g.document !== undefined)
+            throw new DomainError("This is not a Worker.");    
         else if (this.state_ !== WorkerServer.State.NONE)
             throw new DomainError("Server has opened yet.");
         
@@ -208,15 +203,28 @@ export namespace WorkerServer
 /**
  * @hidden
  */
-const g: IFeature = is_node()
-    ? require("./internal/worker-server-polyfill")
-    : self;
+const g: IFeature = (function () {
+    if (is_node() === false)
+        return self;
+    else
+        try 
+        {
+            require("worker_threads");
+            return require("./internal/threads/global"); 
+        }
+        catch 
+        { 
+            return require("./internal/processes/global"); 
+        }
+})();
 
 /**
  * @hidden
  */
 interface IFeature
 {
+    document: Document | undefined;
+
     close(): void;
     postMessage(message: any): void;
     onmessage(event: MessageEvent): void;
